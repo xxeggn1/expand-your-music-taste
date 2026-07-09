@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Credits — Expand Your Music Taste</title>
+<meta name="description" content="Who built Expand Your Music Taste, and what it's made of.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html" class="wordmark">Expand Your Music Taste<span class="dot">.</span></a>
+  <nav class="site-nav">
+    <a href="index.html">Quiz</a>
+    <a href="credits.html" class="active">Credits</a>
+  </nav>
+</header>
+
+<main>
+  <section class="credits-hero">
+    <p class="eyebrow">Liner notes</p>
+    <h1>Everything behind the record.</h1>
+    <p>Who made this, what it runs on, and where the album data actually comes from.</p>
+  </section>
+
+  <section class="credit-grid">
+
+    <div class="credit-card">
+      <div class="credit-num">Made by</div>
+      <div>
+        <h3>Akira / xxeggn</h3>
+        <p>Designed and built Expand Your Music Taste — concept, quiz logic, visual direction, and the Last.fm integration that powers every result.</p>
+      </div>
+    </div>
+
+    <div class="credit-card">
+      <div class="credit-num">Data source</div>
+      <div>
+        <h3>Last.fm API</h3>
+        <p>Every album title, release year, genre tag, cover image, and description shown in your results is fetched live from Last.fm — nothing on the results page is a hand-picked or manual list.</p>
+      </div>
+    </div>
+
+    <div class="credit-card">
+      <div class="credit-num">Languages &amp; tech</div>
+      <div>
+        <h3>Built with</h3>
+        <p>A plain, dependency-free front end.</p>
+        <div class="stack-row">
+          <span class="stack-chip">HTML5</span>
+          <span class="stack-chip">CSS3</span>
+          <span class="stack-chip">JavaScript (ES6+)</span>
+          <span class="stack-chip">Fetch API</span>
+          <span class="stack-chip">SVG</span>
+          <span class="stack-chip">Last.fm REST API</span>
+          <span class="stack-chip">Google Fonts</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="credit-card">
+      <div class="credit-num">Typefaces</div>
+      <div>
+        <h3>Fraunces, IBM Plex Sans &amp; IBM Plex Mono</h3>
+        <p>Fraunces carries the headlines, IBM Plex Sans handles body copy, and IBM Plex Mono is reserved for tags, metadata, and anything that reads like liner notes.</p>
+      </div>
+    </div>
+
+    <div class="credit-card">
+      <div class="credit-num">How results are picked</div>
+      <div>
+        <h3>Automatic, not manual</h3>
+        <p>Your genre answer plus the following nine answers become a set of Last.fm tags. The site queries those tags, scores every album by how many of your answers it matches, filters for era where possible, and hands back a maximum of three pages of results — never a fixed, pre-written list.</p>
+      </div>
+    </div>
+
+  </section>
+</main>
+
+<footer class="site-footer">
+  <span>Expand Your Music Taste &mdash; built by Akira / xxeggn</span>
+  <span>Album data via <a href="https://www.last.fm" target="_blank" rel="noopener">Last.fm</a></span>
+</footer>
+
+</body>
+</html>

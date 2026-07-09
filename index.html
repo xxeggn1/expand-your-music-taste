@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Expand Your Music Taste</title>
+<meta name="description" content="A 10-question quiz that pulls real, live album recommendations from Last.fm based on the genre, era, and mood you're actually in the mood for.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html" class="wordmark">Expand Your Music Taste<span class="dot">.</span></a>
+  <nav class="site-nav">
+    <a href="index.html" class="active">Quiz</a>
+    <a href="credits.html">Credits</a>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ============================== HERO ============================== -->
+  <section id="hero" class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">10 questions &middot; live Last.fm data</p>
+      <h1>Your shelf<br>is <em>stuck</em> on repeat.</h1>
+      <p class="lede">Answer ten quick questions — starting with a genre, ending with a mood — and we'll pull real albums straight from Last.fm's listening data. No hand-picked lists. No filler.</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary" id="start-quiz">Start the quiz</button>
+        <a class="btn btn-ghost" href="credits.html">See how it's built</a>
+      </div>
+      <div class="hero-stats">
+        <div><b>10</b>questions</div>
+        <div><b>40+</b>genres &amp; subgenres</div>
+        <div><b>3</b>pages of results, max</div>
+      </div>
+    </div>
+    <div class="vinyl-stage">
+      <div class="vinyl">
+        <div class="tonearm">
+          <svg viewBox="0 0 100 100" aria-hidden="true">
+            <circle cx="88" cy="12" r="6" fill="var(--paper-dim)"/>
+            <rect x="20" y="9" width="66" height="4" rx="2" fill="var(--paper-dim)"/>
+            <circle cx="20" cy="11" r="4" fill="var(--amber)"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== QUIZ ============================== -->
+  <section id="quiz" class="quiz section">
+    <div class="quiz-shell">
+      <div class="quiz-progress">
+        <div class="progress-disc">
+          <svg viewBox="0 0 56 56">
+            <circle class="progress-track" cx="28" cy="28" r="24"></circle>
+            <circle id="progress-fill" class="progress-fill" cx="28" cy="28" r="24"></circle>
+          </svg>
+        </div>
+        <div id="progress-label" class="progress-label"><b>1</b> / 10</div>
+        <div id="progress-genre" class="progress-genre"></div>
+      </div>
+
+      <p id="q-eyebrow" class="q-eyebrow">Question 1 of 10</p>
+      <h2 id="q-title" class="q-title">Loading&hellip;</h2>
+      <div id="q-options" class="q-options"></div>
+
+      <div class="quiz-nav">
+        <button id="quiz-skip" class="quiz-skip" type="button">Skip this one</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== RESULTS ============================== -->
+  <section id="results" class="results section">
+    <div id="results-summary" class="results-summary"></div>
+    <div id="state-box" class="state-box"></div>
+    <div id="album-grid" class="album-grid"></div>
+    <div id="pager" class="pager"></div>
+    <div class="results-actions">
+      <button id="retake" class="btn btn-ghost" type="button">Retake the quiz</button>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <span>Expand Your Music Taste &mdash; built by Akira / xxeggn</span>
+  <span>Album data via <a href="https://www.last.fm" target="_blank" rel="noopener">Last.fm</a> &middot; <a href="credits.html">Credits &amp; stack</a></span>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
