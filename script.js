@@ -141,9 +141,9 @@ function lfmUrl(params){
   return `${LASTFM_BASE}?${p.toString()}`;
 }
 
-async function fetchTopAlbumsByTag(tag, limit=50){
+async function fetchTopAlbumsByTag(tag, limit=50, page=1){
   try{
-    const res = await fetch(lfmUrl({ method:'tag.gettopalbums', tag, limit }));
+    const res = await fetch(lfmUrl({ method:'tag.gettopalbums', tag, limit, page }));
     if(!res.ok) return [];
     const data = await res.json();
     const list = data?.albums?.album || data?.topalbums?.album || [];
@@ -202,6 +202,46 @@ const ERA_RANGES = {
   '2020s': [2020, 2029],
 };
 
+function shuffleInPlace(arr){
+  for(let i = arr.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// Picks a random page (1..maxPage) of Last.fm's ranked list for a tag, so
+// two calls with the same tag don't always fetch the identical top-50 —
+// still real, tag-matched albums (just a different, still-popular slice of
+// the ranking), which is what lets the *candidate pool itself* vary between
+// runs instead of only ever drawing from one fixed list.
+function randomPage(maxPage){
+  return Math.floor(Math.random() * maxPage) + 1;
+}
+
+// Splits scored entries into `bucketCount` priority tiers (tier 0 = most
+// relevant to the quiz answers) and shuffles the order *within* each tier
+// only. This is what makes retaking the quiz with identical answers surface
+// a different set/order of albums each time without sacrificing accuracy —
+// an album in a lower tier can never jump ahead of one in a higher tier, so
+// results still track the answers; only the pick among comparably-relevant
+// albums is randomized.
+function tierShuffle(entries, bucketCount = 8){
+  if(entries.length <= 1) return entries;
+  const priorities = entries.map(e => e.priority);
+  const max = Math.max(...priorities), min = Math.min(...priorities);
+  const range = Math.max(max - min, 1e-9);
+  const buckets = Array.from({ length: bucketCount }, () => []);
+  entries.forEach(e => {
+    const norm = (e.priority - min) / range; // 0 (least relevant) .. 1 (most)
+    let idx = bucketCount - 1 - Math.floor(norm * bucketCount);
+    idx = Math.min(Math.max(idx, 0), bucketCount - 1);
+    buckets[idx].push(e);
+  });
+  buckets.forEach(shuffleInPlace);
+  return buckets.flat();
+}
+
 function eraTagsFor(era){
   // Extra single-word tags to broaden the candidate pool for that range.
   const map = {
@@ -246,11 +286,11 @@ async function buildResults(answers){
   const compoundTag = answers.era ? `${answers.era} ${genreTag}` : null;
 
   const [primary, compound] = await Promise.all([
-    fetchTopAlbumsByTag(genreTag, 50),
-    compoundTag ? fetchTopAlbumsByTag(compoundTag, 50) : Promise.resolve([]),
+    fetchTopAlbumsByTag(genreTag, 50, randomPage(2)),
+    compoundTag ? fetchTopAlbumsByTag(compoundTag, 50, randomPage(2)) : Promise.resolve([]),
   ]);
   const secondaryLists = await Promise.all(
-    [...secondaryTags, ...eraTags].map(t => fetchTopAlbumsByTag(t, 40))
+    [...secondaryTags, ...eraTags].map(t => fetchTopAlbumsByTag(t, 40, randomPage(3)))
   );
 
   const scoreMap = new Map();
@@ -284,14 +324,16 @@ async function buildResults(answers){
 
   let scored = Array.from(scoreMap.values());
 
-  if(answers.popularity === 'underground'){
-    // Favor records that matched fewer/quieter tags over sheer chart rank.
-    scored.sort((a,b)=> (a.score/a.hits) - (b.score/b.hits));
-  } else if(answers.popularity === 'mainstream'){
-    scored.sort((a,b)=> b.score - a.score);
-  } else {
-    scored.sort((a,b)=> (b.score * b.hits) - (a.score * a.hits));
-  }
+  // Same "mainstream vs underground vs mixed" intent as before, just
+  // expressed as one comparable number so it can drive the tiered shuffle
+  // below instead of a single fixed sort.
+  const priorityOf = (entry) => {
+    if(answers.popularity === 'underground') return -(entry.score / entry.hits);
+    if(answers.popularity === 'mainstream') return entry.score;
+    return entry.score * entry.hits;
+  };
+  scored.forEach(entry => { entry.priority = priorityOf(entry); });
+  scored = tierShuffle(scored, 8);
 
   // De-dupe by artist so one act can't fill the whole shelf.
   const seenArtist = new Map();
