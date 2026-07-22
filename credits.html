@@ -9,11 +9,7 @@
 <link rel="stylesheet" href="style.css">
 <style>
   .record-console{
-    --rc-ink: var(--ink, #2b2420);
-    --rc-paper: var(--paper, #f6efe3);
-    --rc-dim: var(--paper-dim, #e9ddc8);
-    --rc-amber: var(--amber, #cf8a3d);
-    --rc-line: rgba(43,36,32,0.16);
+    --rc-amber: #cf8a3d;
     position: relative;
     display: grid;
     grid-template-columns: 280px 1fr;
@@ -66,17 +62,12 @@
   .rc-tonearm::before{
     content:''; position: absolute; top: 22px; right: 8px;
     width: 12px; height: 12px; border-radius: 50%;
-    background: var(--rc-dim); box-shadow: 0 0 0 3px var(--rc-ink);
+    background: #ddd0b8; box-shadow: 0 0 0 3px #1b1613;
   }
   .rc-tonearm::after{
     content:''; position: absolute; top: 26px; right: 14px;
     width: 88px; height: 4px; border-radius: 3px;
-    background: var(--rc-dim); transform: rotate(38deg); transform-origin: right center;
-  }
-  .rc-tonearm-head{
-    position: absolute; top: 46px; left: 8px;
-    width: 10px; height: 14px; border-radius: 2px;
-    background: var(--rc-amber);
+    background: #ddd0b8; transform: rotate(38deg); transform-origin: right center;
   }
   #t1:checked ~ .rc-sleeve .rc-tonearm{ transform: rotate(-28deg); }
   #t2:checked ~ .rc-sleeve .rc-tonearm{ transform: rotate(-14deg); }
@@ -87,27 +78,28 @@
   .rc-body{ display:flex; flex-direction:column; gap: 2rem; }
   .track-input{ position:absolute; opacity:0; pointer-events:none; }
 
-  .rc-tracklist{ border-top: 1px solid var(--rc-line); }
+  .rc-tracklist{ background:#1b1613; border-radius: 10px; padding: 1rem 1.25rem; }
   .rc-side-label{
     font-family:'IBM Plex Mono', monospace;
     font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--rc-amber); margin: 1.4rem 0 0.4rem;
+    color: var(--rc-amber); margin: 1.2rem 0 0.4rem;
   }
+  .rc-side-label:first-child{ margin-top: 0; }
   .rc-track{
     display: grid;
     grid-template-columns: 2.2rem 1fr auto;
     align-items: baseline;
     gap: 0.75rem;
     padding: 0.65rem 0.75rem;
-    border-bottom: 1px dashed var(--rc-line);
+    border-bottom: 1px dashed rgba(255,255,255,0.1);
     cursor: pointer;
     border-radius: 6px;
     transition: background 0.2s ease, padding-left 0.2s ease;
   }
-  .rc-track:hover{ background: var(--rc-dim); }
-  .rc-idx{ font-family:'IBM Plex Mono', monospace; font-size:0.85rem; opacity:0.6; }
-  .rc-name{ font-family:'Fraunces', serif; font-size: 1.05rem; }
-  .rc-time{ font-family:'IBM Plex Mono', monospace; font-size:0.78rem; opacity:0.55; white-space: nowrap; }
+  .rc-track:hover{ background: rgba(207,138,61,0.15); }
+  .rc-idx{ font-family:'IBM Plex Mono', monospace; font-size:0.85rem; color:#a89a86; }
+  .rc-name{ font-family:'Fraunces', serif; font-size: 1.05rem; color:#f2ead9; }
+  .rc-time{ font-family:'IBM Plex Mono', monospace; font-size:0.78rem; color:#a89a86; white-space: nowrap; }
 
   #t1:checked ~ .rc-body label[for="t1"],
   #t2:checked ~ .rc-body label[for="t2"],
@@ -121,27 +113,33 @@
   #t2:checked ~ .rc-body label[for="t2"] .rc-name,
   #t3:checked ~ .rc-body label[for="t3"] .rc-name,
   #t4:checked ~ .rc-body label[for="t4"] .rc-name,
-  #t5:checked ~ .rc-body label[for="t5"] .rc-name{ color:#201a12; }
+  #t5:checked ~ .rc-body label[for="t5"] .rc-name,
+  #t1:checked ~ .rc-body label[for="t1"] .rc-idx,
+  #t2:checked ~ .rc-body label[for="t2"] .rc-idx,
+  #t3:checked ~ .rc-body label[for="t3"] .rc-idx,
+  #t4:checked ~ .rc-body label[for="t4"] .rc-idx,
+  #t5:checked ~ .rc-body label[for="t5"] .rc-idx,
+  #t1:checked ~ .rc-body label[for="t1"] .rc-time,
+  #t2:checked ~ .rc-body label[for="t2"] .rc-time,
+  #t3:checked ~ .rc-body label[for="t3"] .rc-time,
+  #t4:checked ~ .rc-body label[for="t4"] .rc-time,
+  #t5:checked ~ .rc-body label[for="t5"] .rc-time{ color:#201a12 !important; }
 
   .rc-notes{
     position: relative;
     min-height: 150px;
-    border: 1px solid var(--rc-line);
     border-radius: 10px;
     padding: 1.5rem 1.75rem;
-    background: var(--rc-paper);
+    background: #f6efe3;
   }
-  .rc-note{
-    display:none;
-    animation: rc-fade 0.35s ease;
-  }
-  .rc-note h3{ font-family:'Fraunces', serif; margin: 0 0 0.5rem; }
-  .rc-note p{ margin: 0; line-height: 1.55; }
+  .rc-note{ display:none; animation: rc-fade 0.35s ease; }
+  .rc-note h3{ font-family:'Fraunces', serif; margin: 0 0 0.5rem; color:#2b2420; }
+  .rc-note p{ margin: 0; line-height: 1.55; color:#3d3530; }
   .rc-stack-row{ display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.9rem; }
   .rc-chip{
     font-family:'IBM Plex Mono', monospace; font-size:0.75rem;
     padding: 0.3rem 0.6rem; border-radius: 999px;
-    border: 1px solid var(--rc-line); background: var(--rc-dim);
+    border: 1px solid rgba(43,36,32,0.2); background: #e9ddc8; color:#2b2420;
   }
   #t1:checked ~ .rc-body .rc-notes #note-1,
   #t2:checked ~ .rc-body .rc-notes #note-2,
@@ -185,7 +183,7 @@
     <div class="rc-sleeve">
       <div class="rc-platter">
         <div class="rc-disc"><div class="rc-label">EYMT<span>33&frac13; RPM</span></div></div>
-        <div class="rc-tonearm"><div class="rc-tonearm-head"></div></div>
+        <div class="rc-tonearm"></div>
       </div>
     </div>
 
