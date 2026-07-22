@@ -7,6 +7,157 @@
 <meta name="description" content="Who built Expand Your Music Taste, and what it's made of.">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="stylesheet" href="style.css">
+<style>
+  /* Inlined so this page renders correctly even if style.css hasn't been
+     updated yet — everything below is scoped to .liner-console only. */
+  .liner-console{
+    max-width:1080px;
+    margin:0 auto;
+    padding:0 24px 100px;
+    display:grid;
+    grid-template-columns:300px 1fr;
+    gap:32px;
+  }
+  .track-input{ position:absolute; opacity:0; pointer-events:none; }
+
+  .liner-sleeve{
+    position:sticky;
+    top:100px;
+    align-self:start;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:16px;
+    background:#2a1f37;
+    border:1px solid #3d2f4d;
+    border-radius:20px;
+    padding:36px 20px;
+  }
+  .liner-sleeve .vinyl-mini{
+    width:190px;
+    height:190px;
+    border-radius:50%;
+    position:relative;
+    background:
+      repeating-radial-gradient(circle at 50% 50%,
+        #0e0913 0px, #0e0913 2px,
+        #1a1220 3px, #1a1220 4px);
+    box-shadow:0 20px 40px -16px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.04);
+    animation:liner-spin 9s linear infinite;
+    animation-play-state:paused;
+  }
+  .track-input:checked ~ .liner-sleeve .vinyl-mini{ animation-play-state:running; }
+  .liner-sleeve .vinyl-mini::before{
+    content:'';
+    position:absolute; inset:38%;
+    border-radius:50%;
+    background:conic-gradient(from 90deg, #e8a33d, #d65f7a, #4fa8a0, #e8a33d);
+  }
+  .liner-sleeve .vinyl-mini::after{
+    content:'';
+    position:absolute; inset:47%;
+    border-radius:50%;
+    background:#17101f;
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,0.4);
+  }
+  @keyframes liner-spin{ to{ transform:rotate(360deg); } }
+
+  .liner-tonearm{
+    position:absolute; top:-6%; right:2%;
+    width:34%; height:34%;
+    transform-origin: 88% 12%;
+    transform:rotate(-24deg);
+    transition:transform .5s cubic-bezier(.2,.8,.2,1);
+    pointer-events:none;
+  }
+  .liner-tonearm svg{ width:100%; height:100%; overflow:visible; }
+  #t1:checked ~ .liner-sleeve .liner-tonearm{ transform:rotate(-24deg); }
+  #t2:checked ~ .liner-sleeve .liner-tonearm{ transform:rotate(-10deg); }
+  #t3:checked ~ .liner-sleeve .liner-tonearm{ transform:rotate(4deg); }
+  #t4:checked ~ .liner-sleeve .liner-tonearm{ transform:rotate(18deg); }
+  #t5:checked ~ .liner-sleeve .liner-tonearm{ transform:rotate(32deg); }
+
+  .liner-caption{
+    font-family:'IBM Plex Mono', ui-monospace, monospace;
+    font-size:11px; letter-spacing:0.1em; text-transform:uppercase;
+    color:#cbbfa8; margin:0;
+  }
+
+  .liner-body{ display:flex; flex-direction:column; gap:28px; }
+
+  .liner-tracklist{
+    background:#2a1f37;
+    border:1px solid #3d2f4d;
+    border-radius:16px;
+    padding:10px 16px;
+  }
+  .liner-side-label{
+    font-family:'IBM Plex Mono', ui-monospace, monospace;
+    font-size:11px; letter-spacing:0.14em; text-transform:uppercase;
+    color:#4fa8a0; margin:18px 4px 8px;
+  }
+  .liner-side-label:first-child{ margin-top:10px; }
+
+  .liner-track{
+    display:grid;
+    grid-template-columns:2rem 1fr auto;
+    align-items:baseline;
+    gap:12px;
+    padding:12px 14px;
+    border-radius:10px;
+    border:1px solid transparent;
+    cursor:pointer;
+    transition:border-color .15s ease, background .15s ease;
+  }
+  .liner-track:hover{ background:#1f1728; border-color:#3d2f4d; }
+  .liner-track .idx{ font-family:'IBM Plex Mono', ui-monospace, monospace; font-size:12px; color:#e8a33d; }
+  .liner-track .name{ font-family:'Fraunces', ui-serif, Georgia, serif; font-weight:600; font-size:16px; color:#f3e9d6; }
+  .liner-track .time{ font-family:'IBM Plex Mono', ui-monospace, monospace; font-size:11px; color:#cbbfa8; white-space:nowrap; }
+
+  #t1:checked ~ .liner-body label[for="t1"],
+  #t2:checked ~ .liner-body label[for="t2"],
+  #t3:checked ~ .liner-body label[for="t3"],
+  #t4:checked ~ .liner-body label[for="t4"],
+  #t5:checked ~ .liner-body label[for="t5"]{
+    background:rgba(232,163,61,0.14);
+    border-color:#e8a33d;
+  }
+  #t1:checked ~ .liner-body label[for="t1"] .name,
+  #t2:checked ~ .liner-body label[for="t2"] .name,
+  #t3:checked ~ .liner-body label[for="t3"] .name,
+  #t4:checked ~ .liner-body label[for="t4"] .name,
+  #t5:checked ~ .liner-body label[for="t5"] .name{ color:#e8a33d; }
+
+  .liner-notes{
+    position:relative;
+    min-height:190px;
+    background:#2a1f37;
+    border:1px solid #3d2f4d;
+    border-radius:16px;
+    padding:30px 34px;
+  }
+  .liner-note{ display:none; }
+  .liner-note h3{ font-family:'Fraunces', ui-serif, Georgia, serif; font-size:22px; margin:0 0 10px; color:#f3e9d6; }
+  .liner-note p{ margin:0; color:#cbbfa8; line-height:1.6; font-family:'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif; }
+
+  #t1:checked ~ .liner-body .liner-notes #note-1,
+  #t2:checked ~ .liner-body .liner-notes #note-2,
+  #t3:checked ~ .liner-body .liner-notes #note-3,
+  #t4:checked ~ .liner-body .liner-notes #note-4,
+  #t5:checked ~ .liner-body .liner-notes #note-5{ display:block; }
+
+  .liner-stack-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+  .liner-chip{
+    font-family:'IBM Plex Mono', ui-monospace, monospace; font-size:11px;
+    border:1px solid #3d2f4d; color:#cbbfa8; padding:6px 12px; border-radius:999px;
+  }
+
+  @media (max-width: 860px){
+    .liner-console{ grid-template-columns:1fr; }
+    .liner-sleeve{ position:static; flex-direction:row; justify-content:center; padding:20px; }
+    .liner-sleeve .vinyl-mini{ width:120px; height:120px; }
+  }
+</style>
 </head>
 <body>
 
@@ -33,12 +184,12 @@
     <input type="radio" name="track" id="t5" class="track-input">
 
     <div class="liner-sleeve">
-      <div class="vinyl vinyl-mini">
-        <div class="tonearm">
+      <div class="vinyl-mini">
+        <div class="liner-tonearm">
           <svg viewBox="0 0 100 100" aria-hidden="true">
-            <circle cx="88" cy="12" r="6" fill="var(--paper-dim)"/>
-            <rect x="20" y="9" width="66" height="4" rx="2" fill="var(--paper-dim)"/>
-            <circle cx="20" cy="11" r="4" fill="var(--amber)"/>
+            <circle cx="88" cy="12" r="6" fill="#cbbfa8"/>
+            <rect x="20" y="9" width="66" height="4" rx="2" fill="#cbbfa8"/>
+            <circle cx="20" cy="11" r="4" fill="#e8a33d"/>
           </svg>
         </div>
       </div>
@@ -47,7 +198,7 @@
 
     <div class="liner-body">
       <div class="liner-tracklist">
-        <p class="side-label">Side A</p>
+        <p class="liner-side-label">Side A</p>
         <label for="t1" class="liner-track">
           <span class="idx">A1</span><span class="name">Made By</span><span class="time">Akira / xxeggn</span>
         </label>
@@ -57,7 +208,7 @@
         <label for="t3" class="liner-track">
           <span class="idx">A3</span><span class="name">Built With</span><span class="time">no deps</span>
         </label>
-        <p class="side-label">Side B</p>
+        <p class="liner-side-label">Side B</p>
         <label for="t4" class="liner-track">
           <span class="idx">B1</span><span class="name">Typefaces</span><span class="time">3 families</span>
         </label>
@@ -78,14 +229,14 @@
         <div class="liner-note" id="note-3">
           <h3>A plain, dependency-free front end</h3>
           <p>No frameworks, no build step — just HTML, CSS, and JavaScript talking directly to an API.</p>
-          <div class="stack-row">
-            <span class="stack-chip">HTML5</span>
-            <span class="stack-chip">CSS3</span>
-            <span class="stack-chip">JavaScript (ES6+)</span>
-            <span class="stack-chip">Fetch API</span>
-            <span class="stack-chip">SVG</span>
-            <span class="stack-chip">Last.fm REST API</span>
-            <span class="stack-chip">Google Fonts</span>
+          <div class="liner-stack-row">
+            <span class="liner-chip">HTML5</span>
+            <span class="liner-chip">CSS3</span>
+            <span class="liner-chip">JavaScript (ES6+)</span>
+            <span class="liner-chip">Fetch API</span>
+            <span class="liner-chip">SVG</span>
+            <span class="liner-chip">Last.fm REST API</span>
+            <span class="liner-chip">Google Fonts</span>
           </div>
         </div>
         <div class="liner-note" id="note-4">
