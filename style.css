@@ -365,3 +365,132 @@ button{ font-family:inherit; }
   .site-nav{ gap:14px; }
   .quiz-shell{ padding:28px 18px 34px; }
 }
+
+/* ==========================================================================
+   CREDITS PAGE — interactive liner-notes console
+   Reuses the hero's .vinyl + .tonearm signature element at a smaller scale.
+   ========================================================================== */
+
+.liner-console{
+  max-width:var(--wrap);
+  margin:0 auto;
+  padding:0 24px 100px;
+  display:grid;
+  grid-template-columns:300px 1fr;
+  gap:32px;
+}
+
+.track-input{ position:absolute; opacity:0; pointer-events:none; }
+
+/* -------------------------------------------------- sleeve / mini vinyl */
+.liner-sleeve{
+  position:sticky;
+  top:100px;
+  align-self:start;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:16px;
+  background:var(--ink-card);
+  border:1px solid var(--ink-line);
+  border-radius:20px;
+  padding:36px 20px;
+}
+.vinyl.vinyl-mini{
+  width:190px;
+  height:190px;
+  animation-play-state:paused;
+}
+.track-input:checked ~ .liner-sleeve .vinyl-mini{ animation-play-state:running; }
+.liner-caption{
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--paper-dim);
+  margin:0;
+}
+
+/* tonearm rotation per active track — same element as the hero, just retargeted */
+#t1:checked ~ .liner-sleeve .tonearm{ transform:rotate(-24deg); }
+#t2:checked ~ .liner-sleeve .tonearm{ transform:rotate(-10deg); }
+#t3:checked ~ .liner-sleeve .tonearm{ transform:rotate(4deg); }
+#t4:checked ~ .liner-sleeve .tonearm{ transform:rotate(18deg); }
+#t5:checked ~ .liner-sleeve .tonearm{ transform:rotate(32deg); }
+
+/* -------------------------------------------------- tracklist */
+.liner-body{ display:flex; flex-direction:column; gap:28px; }
+
+.liner-tracklist{
+  background:var(--ink-card);
+  border:1px solid var(--ink-line);
+  border-radius:16px;
+  padding:10px 16px;
+}
+.side-label{
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--teal);
+  margin:18px 4px 8px;
+}
+.side-label:first-child{ margin-top:10px; }
+
+.liner-track{
+  display:grid;
+  grid-template-columns:2rem 1fr auto;
+  align-items:baseline;
+  gap:12px;
+  padding:12px 14px;
+  border-radius:10px;
+  border:1px solid transparent;
+  cursor:pointer;
+  transition:border-color .15s ease, background .15s ease;
+}
+.liner-track:hover{ background:var(--ink-soft); border-color:var(--ink-line); }
+.liner-track .idx{ font-family:var(--font-mono); font-size:12px; color:var(--amber); }
+.liner-track .name{ font-family:var(--font-display); font-weight:600; font-size:16px; color:var(--paper); }
+.liner-track .time{ font-family:var(--font-mono); font-size:11px; color:var(--paper-dim); white-space:nowrap; }
+
+#t1:checked ~ .liner-body label[for="t1"],
+#t2:checked ~ .liner-body label[for="t2"],
+#t3:checked ~ .liner-body label[for="t3"],
+#t4:checked ~ .liner-body label[for="t4"],
+#t5:checked ~ .liner-body label[for="t5"]{
+  background:rgba(232,163,61,0.14);
+  border-color:var(--amber);
+}
+#t1:checked ~ .liner-body label[for="t1"] .name,
+#t2:checked ~ .liner-body label[for="t2"] .name,
+#t3:checked ~ .liner-body label[for="t3"] .name,
+#t4:checked ~ .liner-body label[for="t4"] .name,
+#t5:checked ~ .liner-body label[for="t5"] .name{ color:var(--amber); }
+
+/* -------------------------------------------------- notes panel */
+.liner-notes{
+  position:relative;
+  min-height:190px;
+  background:var(--ink-card);
+  border:1px solid var(--ink-line);
+  border-radius:16px;
+  padding:30px 34px;
+}
+.liner-note{ display:none; animation:liner-fade .3s ease; }
+.liner-note h3{ font-family:var(--font-display); font-size:22px; margin:0 0 10px; color:var(--paper); }
+.liner-note p{ margin:0; color:var(--paper-dim); line-height:1.6; }
+
+#t1:checked ~ .liner-body .liner-notes #note-1,
+#t2:checked ~ .liner-body .liner-notes #note-2,
+#t3:checked ~ .liner-body .liner-notes #note-3,
+#t4:checked ~ .liner-body .liner-notes #note-4,
+#t5:checked ~ .liner-body .liner-notes #note-5{ display:block; }
+
+@keyframes liner-fade{ from{ opacity:0; transform:translateY(4px); } to{ opacity:1; transform:none; } }
+
+/* -------------------------------------------------- responsive */
+@media (max-width: 860px){
+  .liner-console{ grid-template-columns:1fr; }
+  .liner-sleeve{ position:static; flex-direction:row; justify-content:center; padding:20px; }
+  .vinyl.vinyl-mini{ width:120px; height:120px; }
+}
