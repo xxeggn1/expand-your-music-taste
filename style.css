@@ -4,7 +4,7 @@
    progress disc that fills in one groove per quiz question.
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Permanent+Marker&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Poppins:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Parisienne&display=swap');
 
 :root{
   --ink:        #17101f;
@@ -20,10 +20,10 @@
   --lime:       #d7e85e;
   --tape:       rgba(215,232,94,0.85);
 
-  --font-display: 'Unbounded', ui-sans-serif, system-ui, sans-serif;
-  --font-body: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
-  --font-hand: 'Permanent Marker', cursive;
+  --font-display: 'Playfair Display', ui-serif, Georgia, serif;
+  --font-body: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Space Mono', ui-monospace, monospace;
+  --font-hand: 'Parisienne', cursive;
 
   --radius: 6px;
   --wrap: 1080px;
@@ -67,11 +67,11 @@
 
 .sticker{
   font-family:var(--font-hand);
-  font-weight:700;
-  font-size:20px;
+  font-weight:400;
+  font-size:28px;
   color:var(--ink);
   background:var(--amber);
-  padding:6px 16px 8px;
+  padding:4px 18px 10px;
   border-radius:3px 12px 4px 12px/9px 4px 11px 3px;
   box-shadow:0 8px 16px -8px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,0,0,0.08);
   display:inline-block;
@@ -143,11 +143,11 @@ button{ font-family:inherit; }
 }
 .wordmark{
   font-family:var(--font-display);
-  font-weight:600;
-  font-size:15px;
-  letter-spacing:-0.01em;
+  font-weight:700;
+  font-size:18px;
+  letter-spacing:0.01em;
   text-decoration:none;
-  display:flex; align-items:center; gap:8px;
+  display:flex; align-items:center; gap:10px;
   transition:transform .2s ease;
   white-space:nowrap;
 }
@@ -192,13 +192,13 @@ button{ font-family:inherit; }
   letter-spacing:-0.01em;
 }
 .hero h1 em{
-  font-style:normal;
+  font-style:italic;
   color:var(--amber);
-  font-weight:700;
+  font-weight:600;
   position:relative;
   display:inline-block;
-  text-decoration:underline wavy var(--rose);
-  text-decoration-thickness:3px;
+  text-decoration:underline solid var(--rose);
+  text-decoration-thickness:2px;
   text-underline-offset:8px;
 }
 .hero-sticker{
