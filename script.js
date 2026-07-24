@@ -1,7 +1,12 @@
 /* ==========================================================================
-   EXPAND YOUR MUSIC TASTE — quiz engine + Last.fm integration
-   Every album, image, description and tag shown in results is fetched live
-   from the Last.fm API. Nothing here is a hand-picked/manual album list.
+   EXPAND YOUR MUSIC TASTE — quiz engine + Last.fm integration + manual albums
+   Albums shown in results come from TWO sources, merged and scored together:
+     1) Live Last.fm tag/artist lookups (as before)
+     2) A hand-picked MANUAL_ALBUMS list below, so certain records always
+        have a shot at appearing even if a given Last.fm tag comes back thin.
+   Manual albums still get real cover art / description / links pulled live
+   from Last.fm's album.getInfo — only the "which albums exist" part is
+   hardcoded, not the artwork or metadata.
    ========================================================================== */
 
 const LASTFM_API_KEY = '67e0d954a7e0731a2b34da83292bd5e3';
@@ -29,6 +34,105 @@ const GENRES = [
   ['K-Pop','k-pop'], ['Blues','blues'], ['Ska','ska'],
   ['Emo','emo'], ['Lo-Fi','lo-fi'], ['Experimental','experimental'],
 ];
+
+/* ==========================================================================
+   MANUAL ALBUMS — edit this list freely.
+   Each entry:
+     artist, name, year   — real facts about the release
+     genreTag             — MUST exactly match one of the tag values in the
+                             GENRES array above (the second item in each pair,
+                             e.g. 'shoegaze', 'alternative rock', 'k-pop')
+     tags                 — any of the mood/production/energy/context/
+                             instrumentation VALUES used in the QUESTIONS
+                             below (not the labels). Valid values to pick from:
+       mood:            upbeat, chillout, dark, melancholic, experimental
+       production:      lo-fi  (leave out entirely for "polished/doesn't matter")
+       energy:          energetic, groovy, atmospheric
+       context:         study, workout, party, late night, driving
+       instrumentation: guitar, electronic, piano, bass
+   The more tags an entry shares with a user's answers, the more likely it
+   is to surface. You don't need to fill in every category — a couple of
+   well-chosen tags per album is plenty.
+   ========================================================================== */
+const MANUAL_ALBUMS = [
+  { artist:'Slowdive', name:'Souvlaki', year:1993, genreTag:'shoegaze',
+    tags:['dreamy','atmospheric','guitar','late night'] },
+  { artist:'My Bloody Valentine', name:'Loveless', year:1991, genreTag:'shoegaze',
+    tags:['dreamy','atmospheric','guitar','experimental'] },
+  { artist:'Radiohead', name:'In Rainbows', year:2007, genreTag:'alternative rock',
+    tags:['melancholic','atmospheric','guitar','study'] },
+  { artist:'Radiohead', name:'Kid A', year:2000, genreTag:'alternative rock',
+    tags:['dark','experimental','electronic','late night'] },
+  { artist:'Nirvana', name:'Nevermind', year:1991, genreTag:'grunge',
+    tags:['energetic','guitar','dark'] },
+  { artist:'Kendrick Lamar', name:'To Pimp a Butterfly', year:2015, genreTag:'hip hop',
+    tags:['dark','melancholic','bass','study'] },
+  { artist:'J Dilla', name:'Donuts', year:2006, genreTag:'boom bap',
+    tags:['chillout','bass','study','instrumental'] },
+  { artist:"D'Angelo", name:'Voodoo', year:2000, genreTag:'neo soul',
+    tags:['groovy','chillout','late night'] },
+  { artist:'Erykah Badu', name:'Mama\u2019s Gun', year:2000, genreTag:'neo soul',
+    tags:['groovy','chillout','vocal'] },
+  { artist:'Daft Punk', name:'Discovery', year:2001, genreTag:'house',
+    tags:['upbeat','energetic','electronic','party'] },
+  { artist:'Aphex Twin', name:'Selected Ambient Works 85-92', year:1992, genreTag:'ambient',
+    tags:['chillout','atmospheric','electronic','study'] },
+  { artist:'Boards of Canada', name:'Music Has the Right to Children', year:1998, genreTag:'idm',
+    tags:['atmospheric','melancholic','electronic','late night'] },
+  { artist:'John Coltrane', name:'A Love Supreme', year:1965, genreTag:'jazz',
+    tags:['atmospheric','experimental','instrumental'] },
+  { artist:'Miles Davis', name:'Kind of Blue', year:1959, genreTag:'jazz',
+    tags:['chillout','atmospheric','instrumental','late night'] },
+  { artist:'Black Sabbath', name:'Paranoid', year:1970, genreTag:'metal',
+    tags:['dark','energetic','guitar'] },
+  { artist:'Mitski', name:'Be the Cowboy', year:2018, genreTag:'indie',
+    tags:['melancholic','vocal','study'] },
+  { artist:'Big Thief', name:'U.F.O.F.', year:2019, genreTag:'indie folk',
+    tags:['dreamy','atmospheric','guitar'] },
+  { artist:'Fleet Foxes', name:'Fleet Foxes', year:2008, genreTag:'folk',
+    tags:['chillout','guitar','driving'] },
+  { artist:'Bon Iver', name:'For Emma, Forever Ago', year:2007, genreTag:'folk',
+    tags:['melancholic','atmospheric','guitar','late night'] },
+  { artist:'Fela Kuti', name:'Zombie', year:1976, genreTag:'funk',
+    tags:['groovy','energetic','party'] },
+  { artist:'Bob Marley & The Wailers', name:'Legend', year:1984, genreTag:'reggae',
+    tags:['chillout','groovy','driving'] },
+  { artist:'ABBA', name:'Arrival', year:1976, genreTag:'disco',
+    tags:['upbeat','party','vocal'] },
+  { artist:'NewJeans', name:'Get Up', year:2023, genreTag:'k-pop',
+    tags:['upbeat','energetic','party'] },
+  { artist:'Frank Ocean', name:'Blonde', year:2016, genreTag:'rnb',
+    tags:['melancholic','atmospheric','late night'] },
+  { artist:'Rage Against the Machine', name:'Rage Against the Machine', year:1992, genreTag:'punk',
+    tags:['dark','energetic','guitar','workout'] },
+  { artist:'Death Grips', name:'The Money Store', year:2012, genreTag:'experimental',
+    tags:['dark','energetic','experimental','workout'] },
+  { artist:'Burial', name:'Untrue', year:2007, genreTag:'electronic',
+    tags:['dark','atmospheric','late night','electronic'] },
+  { artist:'Amy Winehouse', name:'Back to Black', year:2006, genreTag:'soul',
+    tags:['melancholic','vocal','late night'] },
+  { artist:'Tyler, The Creator', name:'Flower Boy', year:2017, genreTag:'hip hop',
+    tags:['dreamy','melancholic','driving'] },
+  { artist:'Vince Guaraldi Trio', name:'A Charlie Brown Christmas', year:1965, genreTag:'jazz',
+    tags:['chillout','piano','instrumental'] },
+];
+
+// Several real search terms per genre (not albums) so a single genre pick
+// pulls from many corners of Last.fm's catalog instead of one query's top
+// results — this is what makes the randomizer feel like it's drawing from
+// the whole catalog rather than a small fixed set.
+const GENRE_QUERY_TERMS = {
+  'Rock': ['rock', 'classic rock', 'alternative rock', 'indie rock', 'punk rock'],
+  'Pop': ['pop', 'pop rock', 'synth pop', 'dance pop', 'indie pop'],
+  'Hip-Hop': ['hip hop', 'rap', 'trap', 'conscious hip hop', 'boom bap'],
+  'R&B': ['r&b', 'soul', 'neo soul', 'contemporary r&b', 'funk'],
+  'Indie': ['indie', 'indie folk', 'indie pop', 'dream pop', 'lo-fi'],
+  'Metal': ['metal', 'heavy metal', 'metalcore', 'death metal', 'thrash metal'],
+  'Jazz': ['jazz', 'smooth jazz', 'bebop', 'jazz fusion', 'big band'],
+  'Folk': ['folk', 'folk rock', 'singer songwriter', 'americana', 'bluegrass'],
+  'Electronic': ['electronic', 'house', 'techno', 'edm', 'ambient'],
+  'K-pop': ['k-pop', 'korean pop', 'k-hip hop', 'k-rnb', 'korean ballad'],
+};
 
 const QUESTIONS = [
   {
@@ -278,6 +382,32 @@ function matchesEra(info, era){
   return false; // unverifiable era → exclude rather than risk a wrong decade
 }
 
+// Scores every MANUAL_ALBUMS entry against the current answers using the
+// same tag-overlap idea as the live Last.fm lists, so manual picks compete
+// fairly instead of being force-inserted regardless of fit. Genre and era
+// (when the user picked one) are hard requirements; everything else adds
+// bonus score based on how many other answers the album's tags match.
+function scoreManualAlbums(answers){
+  const wantedTags = [answers.mood, answers.production, answers.energy, answers.context, answers.instrumentation]
+    .filter(Boolean);
+  const results = [];
+  MANUAL_ALBUMS.forEach(m=>{
+    if(answers.genre && m.genreTag !== answers.genre) return;
+    if(answers.era){
+      const range = ERA_RANGES[answers.era];
+      if(range && !(m.year >= range[0] && m.year <= range[1])) return;
+    }
+    const hits = m.tags.filter(t => wantedTags.includes(t)).length;
+    results.push({
+      album: { name:m.name, artist:m.artist, url:'' },
+      score: 60 + hits * 15, // baseline competitive with a strong live hit, boosted per matching tag
+      hits: hits + 1,
+      manualYear: m.year,
+    });
+  });
+  return results;
+}
+
 async function buildResults(answers){
   const genreTag = answers.genre;
   const secondaryTags = [answers.mood, answers.production, answers.energy, answers.context, answers.instrumentation]
@@ -322,6 +452,15 @@ async function buildResults(answers){
     });
   });
 
+  // Merge in the manual catalog, scored against the same answers. If a
+  // manual album happens to also show up from Last.fm's live lists above,
+  // the live entry (with its accumulated score) wins and the manual score
+  // is skipped for that title, so nothing is scored twice.
+  scoreManualAlbums(answers).forEach(entry=>{
+    const k = key(entry.album);
+    if(!scoreMap.has(k)) scoreMap.set(k, entry);
+  });
+
   let scored = Array.from(scoreMap.values());
 
   // Same "mainstream vs underground vs mixed" intent as before, just
@@ -349,18 +488,37 @@ async function buildResults(answers){
   }
 
   // Enrich with real details from Last.fm and hard-filter by era as we go.
+  // Manual albums use their own known `year` for the era check (since we
+  // already have ground truth), rather than relying on Last.fm's own tags
+  // possibly missing a clear decade/year tag for that release.
   const enriched = [];
   const batchSize = 6;
   for(let i=0; i<candidates.length && enriched.length < MAX_RESULTS; i += batchSize){
     const batch = candidates.slice(i, i+batchSize);
     const infos = await Promise.all(batch.map(c => fetchAlbumInfo(c.artist, c.name)));
-    infos.forEach(info=>{
-      if(info && info.name && info.artist && matchesEra(info, answers.era)){
+    infos.forEach((info, idx)=>{
+      const c = batch[idx];
+      const manual = MANUAL_ALBUMS.find(m =>
+        m.artist.toLowerCase() === c.artist.toLowerCase() &&
+        m.name.toLowerCase() === c.name.toLowerCase()
+      );
+      const eraOk = manual
+        ? (!answers.era || (ERA_RANGES[answers.era] &&
+            manual.year >= ERA_RANGES[answers.era][0] &&
+            manual.year <= ERA_RANGES[answers.era][1]))
+        : matchesEra(info || {tags:[]}, answers.era);
+
+      if(info && info.name && info.artist && eraOk){
         if(!info.summary){
           const shownTags = info.tags.slice(0,3);
           info.summary = shownTags.length
             ? `A ${genreLabel(genreTag)} record carrying the tags ${shownTags.join(', ')}.`
             : `A ${genreLabel(genreTag)} record, sitting quietly in Last.fm's crates.`;
+        }
+        // If Last.fm didn't return any usable tags for era display, fall
+        // back to the manual album's known year so it still shows correctly.
+        if(manual && !info.tags.some(t => /^(19|20)\d{2}$/.test(t.trim()))){
+          info.tags = [...info.tags, String(manual.year)];
         }
         enriched.push(info);
       }
