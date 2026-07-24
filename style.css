@@ -4,7 +4,7 @@
    progress disc that fills in one groove per quiz question.
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Poppins:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Parisienne&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Poppins:wght@300;400;500;600;700&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Parisienne&display=swap');
 
 :root{
   --ink:        #17101f;
@@ -22,7 +22,7 @@
 
   --font-display: 'Playfair Display', ui-serif, Georgia, serif;
   --font-body: 'Poppins', ui-sans-serif, system-ui, sans-serif;
-  --font-mono: 'Space Mono', ui-monospace, monospace;
+  --font-mono: 'Courier Prime', ui-monospace, monospace;
   --font-hand: 'Parisienne', cursive;
 
   --radius: 6px;
