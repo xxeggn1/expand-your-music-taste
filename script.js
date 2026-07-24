@@ -32,24 +32,24 @@ const GENRES = [
 
 const QUESTIONS = [
   {
-    key:'genre', eyebrow:'Question 1 of 10 — the foundation',
-    title:'Pick the genre you want to dig into (subgenres welcome).',
+    key:'genre', eyebrow:'Question 1 of 10 — lay the foundation',
+    title:'Pick your poison. Subgenres welcome, snobbery encouraged.',
     type:'genre',
     options: GENRES.map(([label,tag])=>({label, value:tag})),
   },
   {
-    key:'era', eyebrow:'Question 2 of 10 — era',
+    key:'era', eyebrow:'Question 2 of 10 — set the dial',
     title:'What decade should the needle drop on?',
     options:[
       {label:'60s–70s — roots & revolution', value:'70s'},
       {label:'80s–90s — neon & noise', value:'90s'},
       {label:'2000s–2010s — the blog era', value:'2000s'},
       {label:'2020s–now — fresh pressings', value:'2020s'},
-      {label:'Surprise me across decades', value:''},
+      {label:'Shuffle across every decade', value:''},
     ],
   },
   {
-    key:'mood', eyebrow:'Question 3 of 10 — mood',
+    key:'mood', eyebrow:'Question 3 of 10 — feelings check',
     title:'What mood are you chasing right now?',
     options:[
       {label:'Energetic & upbeat', value:'upbeat'},
@@ -60,19 +60,19 @@ const QUESTIONS = [
     ],
   },
   {
-    key:'vocal', eyebrow:'Question 4 of 10 — voice',
-    title:'How do you want the vocals?',
+    key:'vocal', eyebrow:'Question 4 of 10 — mic check',
+    title:'How loud should the singer be in the room?',
     options:[
       {label:'Powerful, belting vocals', value:'vocal'},
       {label:'Soft, airy vocals', value:'dreamy'},
       {label:'Rap / spoken word', value:'rap'},
       {label:'Instrumental — no vocals', value:'instrumental'},
-      {label:'Doesn\u2019t matter', value:''},
+      {label:'Surprise me either way', value:''},
     ],
   },
   {
-    key:'popularity', eyebrow:'Question 5 of 10 — depth',
-    title:'Hits, hidden gems, or both?',
+    key:'popularity', eyebrow:'Question 5 of 10 — cred check',
+    title:'Chart-topper energy, deep-cut mystery, or both?',
     options:[
       {label:'Give me the known hits', value:'mainstream'},
       {label:'Take me underground', value:'underground'},
@@ -80,17 +80,17 @@ const QUESTIONS = [
     ],
   },
   {
-    key:'production', eyebrow:'Question 6 of 10 — texture',
-    title:'What should the production feel like?',
+    key:'production', eyebrow:'Question 6 of 10 — texture check',
+    title:'How should the recording sound — studio-shiny or tape-hiss real?',
     options:[
       {label:'Polished & pristine', value:''},
       {label:'Raw & lo-fi', value:'lo-fi'},
-      {label:'Doesn\u2019t matter', value:''},
+      {label:'Doesn\u2019t matter one bit', value:''},
     ],
   },
   {
-    key:'energy', eyebrow:'Question 7 of 10 — tempo',
-    title:'Pick a tempo.',
+    key:'energy', eyebrow:'Question 7 of 10 — set the speed',
+    title:'Pick a tempo — how fast is your foot tapping?',
     options:[
       {label:'High energy, fast', value:'energetic'},
       {label:'Mid-tempo groove', value:'groovy'},
@@ -98,8 +98,8 @@ const QUESTIONS = [
     ],
   },
   {
-    key:'discovery', eyebrow:'Question 8 of 10 — risk',
-    title:'How far outside your usual crate should we reach?',
+    key:'discovery', eyebrow:'Question 8 of 10 — risk tolerance',
+    title:'How far outside your usual crate should we drag you?',
     options:[
       {label:'Keep it close to familiar', value:'close'},
       {label:'Push me a little further', value:'stretch'},
@@ -107,7 +107,7 @@ const QUESTIONS = [
     ],
   },
   {
-    key:'context', eyebrow:'Question 9 of 10 — setting',
+    key:'context', eyebrow:'Question 9 of 10 — scene-setting',
     title:'Where will this album actually get played?',
     options:[
       {label:'Studying / focusing', value:'study'},
@@ -118,8 +118,8 @@ const QUESTIONS = [
     ],
   },
   {
-    key:'instrumentation', eyebrow:'Question 10 of 10 — texture',
-    title:'What should be driving the sound?',
+    key:'instrumentation', eyebrow:'Question 10 of 10 — the finish line',
+    title:'Last one. What\u2019s actually driving the sound?',
     options:[
       {label:'Guitars', value:'guitar'},
       {label:'Synths & electronics', value:'electronic'},
@@ -476,8 +476,8 @@ const pagerEl = document.getElementById('pager');
 function renderResultsSummary(){
   const a = state.answers;
   summaryEl.innerHTML = `
-    <p class="eyebrow" style="text-align:center;">Your shelf, freshly pulled</p>
-    <h2>${a.genre_label || 'Your genre'}, filtered through ${QUESTIONS.length} questions</h2>
+    <p class="eyebrow" style="text-align:center; justify-content:center;"><span class="eq-bars" aria-hidden="true"><span></span><span></span><span></span><span></span></span> Your shelf, freshly pulled</p>
+    <h2><span class="marker">${a.genre_label || 'Your genre'}</span>, interrogated across ${QUESTIONS.length} questions</h2>
     <div class="tag-row">
       ${[a.era_label, a.mood_label, a.vocal_label, a.popularity_label, a.production_label, a.energy_label, a.discovery_label, a.context_label, a.instrumentation_label]
         .filter(Boolean).map(t=>`<span class="tag-pill">${t}</span>`).join('')}
@@ -490,14 +490,15 @@ function renderState(kind){
   pagerEl.innerHTML = '';
   if(kind === 'loading'){
     stateBoxEl.innerHTML = `
+      <div class="eq-bars" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
       <div class="vinyl"></div>
-      <p>Digging through Last.fm's crates for records that actually match&hellip;</p>`;
+      <p>Crate-digging through Last.fm for records that actually match&hellip; hang tight, this needle doesn't skip.</p>`;
     stateBoxEl.className = 'state-box';
   } else if(kind === 'empty'){
-    stateBoxEl.innerHTML = `<p>The crate came up empty for that exact combination. Try retaking the quiz with one fewer constraint.</p>`;
+    stateBoxEl.innerHTML = `<p>Well, that's awkward — the crate came up empty for that exact combo. Retake the quiz and loosen one constraint; the algorithm will forgive you.</p>`;
     stateBoxEl.className = 'state-box';
   } else if(kind === 'error'){
-    stateBoxEl.innerHTML = `<p>Last.fm didn't answer the phone. Check your connection and retake the quiz.</p>`;
+    stateBoxEl.innerHTML = `<p>Last.fm didn't pick up the phone. Check your connection and give the quiz another spin.</p>`;
     stateBoxEl.className = 'state-box error';
   }
   stateBoxEl.style.display = 'block';
@@ -508,7 +509,7 @@ function renderAlbumPage(){
   const start = state.page * RESULTS_PER_PAGE;
   const pageItems = state.results.slice(start, start + RESULTS_PER_PAGE);
 
-  albumGridEl.innerHTML = pageItems.map(album=>{
+  albumGridEl.innerHTML = pageItems.map((album, i)=>{
     const artHtml = album.image
       ? `<img src="${album.image}" alt="${escapeHtml(album.name)} cover art" loading="lazy">`
       : `<div class="no-art">No cover art on file — click through to Last.fm</div>`;
@@ -517,8 +518,10 @@ function renderAlbumPage(){
     const yearText = exactYear ? exactYear : (decadeStart !== null ? `${decadeStart}s` : 'Year unknown');
     const yt = `https://www.youtube.com/results?search_query=${encodeURIComponent(album.artist + ' ' + album.name)}`;
     const sp = `https://open.spotify.com/search/${encodeURIComponent(album.artist + ' ' + album.name)}`;
+    const tilt = ((i % 2 === 0) ? -1 : 1) * (0.6 + (i % 3) * 0.5);
+    const style = `--tilt:${tilt}deg; animation-delay:${i * 0.05}s;`;
     return `
-      <article class="album-card">
+      <article class="album-card" style="${style}">
         <div class="album-art">${artHtml}</div>
         <div class="album-body">
           <p class="album-meta">${escapeHtml(genre)} &middot; ${escapeHtml(yearText)}</p>
