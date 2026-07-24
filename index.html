@@ -22,18 +22,19 @@
 
   <!-- ============================== HERO ============================== -->
   <section id="hero" class="hero">
+    <span class="sticker hero-sticker" style="--r:9deg; --d:.2s;">18 bops, tops!</span>
     <div class="hero-copy">
-      <p class="eyebrow">10 questions &middot; live Last.fm data</p>
+      <p class="eyebrow"><span class="eq-bars" aria-hidden="true"><span></span><span></span><span></span><span></span></span> 10 questions &middot; live Last.fm data</p>
       <h1>Your shelf<br>is <em>stuck</em> on repeat.</h1>
-      <p class="lede">Answer ten quick questions — starting with a genre, ending with a mood — and we'll pull real albums straight from Last.fm's listening data. No hand-picked lists. No filler.</p>
+      <p class="lede">Answer ten nosy questions — starting with a genre, ending with a vibe — and we'll dig up real albums straight from Last.fm's actual listening data. No hand-picked lists. No filler. No "trust me bro."</p>
       <div class="hero-actions">
-        <button class="btn btn-primary" id="start-quiz">Start the quiz</button>
-        <a class="btn btn-ghost" href="credits.html">See how it's built</a>
+        <button class="btn btn-primary" id="start-quiz">Break the loop &rarr;</button>
+        <a class="btn btn-ghost" href="credits.html">Peek behind the curtain</a>
       </div>
       <div class="hero-stats">
-        <div><b>10</b>questions</div>
+        <div><b>10</b>nosy questions</div>
         <div><b>40+</b>genres &amp; subgenres</div>
-        <div><b>3</b>pages of results, max</div>
+        <div><b>0</b>hand-picked albums</div>
       </div>
     </div>
     <div class="vinyl-stage">
@@ -49,9 +50,14 @@
     </div>
   </section>
 
+  <svg class="squiggle-divider" width="220" height="20" viewBox="0 0 220 20" aria-hidden="true">
+    <path d="M2 10 Q 20 -2, 38 10 T 74 10 T 110 10 T 146 10 T 182 10 T 218 10"/>
+  </svg>
+
   <!-- ============================== QUIZ ============================== -->
   <section id="quiz" class="quiz section">
     <div class="quiz-shell">
+      <span class="sticker quiz-stamp alt" style="--r:-6deg;">no cheating</span>
       <div class="quiz-progress">
         <div class="progress-disc">
           <svg viewBox="0 0 56 56">
@@ -68,7 +74,7 @@
       <div id="q-options" class="q-options"></div>
 
       <div class="quiz-nav">
-        <button id="quiz-skip" class="quiz-skip" type="button">Skip this one</button>
+        <button id="quiz-skip" class="quiz-skip" type="button">Eh, skip it &rarr;</button>
       </div>
     </div>
   </section>
@@ -80,14 +86,14 @@
     <div id="album-grid" class="album-grid"></div>
     <div id="pager" class="pager"></div>
     <div class="results-actions">
-      <button id="retake" class="btn btn-ghost" type="button">Retake the quiz</button>
+      <button id="retake" class="btn btn-ghost" type="button">Run it back &#8635;</button>
     </div>
   </section>
 
 </main>
 
 <footer class="site-footer">
-  <span>Expand Your Music Taste &mdash; built by Akira / xxeggn</span>
+  <span>Expand Your Music Taste &mdash; built by Akira / xxeggn, powered by mild obsession</span>
   <span>Album data via <a href="https://www.last.fm" target="_blank" rel="noopener">Last.fm</a> &middot; <a href="credits.html">Credits &amp; stack</a></span>
 </footer>
 
