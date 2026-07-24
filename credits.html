@@ -107,9 +107,9 @@
     border-radius:10px;
     border:1px solid transparent;
     cursor:pointer;
-    transition:border-color .15s ease, background .15s ease;
+    transition:border-color .15s ease, background .15s ease, transform .15s ease;
   }
-  .liner-track:hover{ background:#1f1728; border-color:#3d2f4d; }
+  .liner-track:hover{ background:#1f1728; border-color:#3d2f4d; transform:translateX(3px); }
   .liner-track .idx{ font-family:'IBM Plex Mono', ui-monospace, monospace; font-size:12px; color:#e8a33d; }
   .liner-track .name{ font-family:'Fraunces', ui-serif, Georgia, serif; font-weight:600; font-size:16px; color:#f3e9d6; }
   .liner-track .time{ font-family:'IBM Plex Mono', ui-monospace, monospace; font-size:11px; color:#cbbfa8; white-space:nowrap; }
@@ -171,9 +171,9 @@
 
 <main>
   <section class="credits-hero">
-    <p class="eyebrow">Liner notes</p>
-    <h1>Everything behind the record.</h1>
-    <p>Drop the needle on any track below — the tonearm follows along. Side A covers who and what; Side B covers how the recommendations actually happen.</p>
+    <p class="eyebrow" style="justify-content:center;">Liner notes</p>
+    <h1>Everything behind the record<span style="color:#e8a33d;">.</span></h1>
+    <p>Drop the needle on any track below — the tonearm follows along, because it has nothing better to do. Side A covers who and what; Side B covers how the recommendations actually happen (spoiler: math, not vibes).</p>
   </section>
 
   <section class="liner-console">
@@ -227,8 +227,8 @@
           <p>Every album title, release year, genre tag, cover image, and description shown in your results is fetched live from Last.fm — nothing on the results page is a hand-picked or manual list.</p>
         </div>
         <div class="liner-note" id="note-3">
-          <h3>A plain, dependency-free front end</h3>
-          <p>No frameworks, no build step — just HTML, CSS, and JavaScript talking directly to an API.</p>
+          <h3>A scrappy, dependency-free front end</h3>
+          <p>No frameworks, no build step — just HTML, CSS, and JavaScript talking directly to an API, held together with duct tape and good intentions.</p>
           <div class="liner-stack-row">
             <span class="liner-chip">HTML5</span>
             <span class="liner-chip">CSS3</span>
@@ -253,7 +253,7 @@
 </main>
 
 <footer class="site-footer">
-  <span>Expand Your Music Taste &mdash; built by Akira / xxeggn</span>
+  <span>Expand Your Music Taste &mdash; built by Akira / xxeggn, powered by mild obsession</span>
   <span>Album data via <a href="https://www.last.fm" target="_blank" rel="noopener">Last.fm</a></span>
 </footer>
 
